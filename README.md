@@ -1,24 +1,28 @@
-# README
+# Ruby-Dormitory
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+ระบบจัดการหอพักด้วย Ruby on Rails
 
-Things you may want to cover:
+## เริ่มต้นใช้งาน
 
-* Ruby version
+```bash
+bundle install
+bin/rails db:migrate
+bin/rails server
+```
 
-* System dependencies
+จากนั้นเปิด `http://localhost:3000/login`
 
-* Configuration
+ข้อมูลเข้าสู่ระบบเริ่มต้น:
 
-* Database creation
+```text
+Email: admin@dormitory.local
+Password: dormitory123
+```
 
-* Database initialization
+## ฟีเจอร์
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- Dashboard จัดการภาพรวมหอพัก
+- เพิ่ม แก้ไข และลบห้องพัก
+- จัดการผู้พักและประวัติผู้พักออก
+- คำนวณค่าเช่า ค่าน้ำ และค่าไฟตามมิเตอร์
+- บันทึกสถานะการชำระเงินและประวัติบิล
