@@ -1,0 +1,30 @@
+<% content_for :title, "ค่าใช้จ่าย | พักดี" %>
+<header class="topbar page-heading"><div><p class="eyebrow">MONTHLY BILLING · <%= l(@billing_month, format: "%B %Y") %></p><h1>ค่าใช้จ่ายประจำเดือน</h1><p class="muted">คำนวณค่าเช่า ค่าน้ำ และค่าไฟของผู้พักอาศัย</p></div><div class="billing-total"><span>ยอดรวมทั้งหมด</span><strong><%= number_to_currency(@total_billing, unit: "", precision: 2) %></strong><small>บาท / เดือน</small></div></header>
+
+<div class="billing-note"><span>i</span><p><strong>อัตราค่าน้ำเหมาจ่าย 100 บาท/คน</strong> · ค่าไฟคำนวณจากหน่วยที่ใช้จริง × อัตราต่อหน่วยของห้อง · จ่ายแล้ว <strong><%= @paid_count %></strong> ห้อง</p></div>
+
+<section class="billing-grid">
+  <% if @occupied_rooms.any? %>
+    <% @occupied_rooms.each do |room| %>
+      <% invoice = @invoices.find { |item| item.room_id == room.id } %>
+      <article class="content-card billing-card <%= 'is-paid' if invoice.paid? %>">
+        <div class="billing-card-heading"><div><span class="room-number">ห้อง <%= room.room_number %></span><p><%= room.tenants.active.map(&:name).join(", ") %></p></div><span class="status-pill <%= invoice.paid? ? 'status-paid' : 'status-pending' %>"><%= invoice.paid? ? 'จ่ายแล้ว' : 'รอชำระ' %></span></div>
+        <% if invoice.paid? %><div class="invoice-meta"><span class="paid-copy">ชำระแล้ว <strong><%= l(invoice.paid_at, format: "%d/%m/%Y") %></strong></span></div><% end %>
+        <div class="charge-breakdown">
+          <div><span>ค่าเช่าห้อง</span><strong><%= number_to_currency(room.rent, unit: "", precision: 2) %> <small>บาท</small></strong></div>
+          <div><span>ค่าน้ำ (<%= room.tenants.active.count %> คน × 100)</span><strong><%= number_to_currency(room.water_charge, unit: "", precision: 2) %> <small>บาท</small></strong></div>
+          <div><span>ค่าไฟ (<%= room.electricity_units %> หน่วย × <%= room.electricity_rate %>)</span><strong><%= number_to_currency(room.electricity_charge, unit: "", precision: 2) %> <small>บาท</small></strong></div>
+        </div>
+        <div class="billing-total-row"><span>รวมค่าใช้จ่าย</span><strong><%= number_to_currency(invoice.base_amount, unit: "", precision: 2) %> บาท</strong></div>
+        <div class="invoice-total-row"><span>ยอดสุทธิ</span><strong><%= number_to_currency(invoice.total_amount, unit: "", precision: 2) %> บาท</strong></div>
+        <% unless invoice.paid? %><%= form_with url: pay_invoice_path(invoice), method: :patch, class: "payment-form" do |payment_form| %><%= payment_form.submit "✓  บันทึกว่าชำระแล้ว", class: "button button-primary button-full" %><% end %><% end %>
+        <% unless invoice.paid? %><%= form_with model: room, url: billing_room_path(room), method: :patch, class: "meter-form" do |form| %>
+          <div class="meter-heading"><strong>บันทึกมิเตอร์ไฟ</strong><span>หน่วย (kWh)</span></div>
+          <div class="meter-fields"><label>ครั้งก่อน<%= form.number_field :electricity_meter_previous, min: 0, step: 1 %></label><label>ครั้งนี้<%= form.number_field :electricity_meter_current, min: 0, step: 1 %></label><label>บาท/หน่วย<%= form.number_field :electricity_rate, min: 0, step: 0.01 %></label><%= form.submit "บันทึก", class: "button button-primary button-small" %></div>
+        <% end %><% end %>
+      </article>
+    <% end %>
+  <% else %>
+    <section class="content-card empty-state billing-empty"><span>฿</span><strong>ยังไม่มีห้องที่มีผู้พัก</strong><p>เมื่อมีผู้พักอาศัย ระบบจะคำนวณค่าใช้จ่ายให้ที่หน้านี้</p></section>
+  <% end %>
+</section>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "พักดี | ระบบจัดการหอพัก" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+  </head>
+
+  <body>
+    <% if logged_in? %>
+      <aside class="sidebar">
+        <a class="brand" href="<%= root_path %>">
+          <span class="brand-mark">พ</span>
+          <span><strong>พักดี</strong><small>RESIDENCE ADMIN</small></span>
+        </a>
+        <nav class="main-nav" aria-label="เมนูหลัก">
+          <span class="nav-label">ภาพรวม</span>
+          <%= link_to root_path, class: "nav-link #{controller_name == 'application' ? 'is-active' : ''}" do %>
+            <span class="nav-icon">⌂</span> แดชบอร์ด
+          <% end %>
+          <span class="nav-label">จัดการข้อมูล</span>
+          <%= link_to rooms_path, class: "nav-link #{controller_name == 'rooms' ? 'is-active' : ''}" do %>
+            <span class="nav-icon">▦</span> ห้องพัก
+          <% end %>
+          <%= link_to tenants_path, class: "nav-link #{controller_name == 'tenants' ? 'is-active' : ''}" do %>
+            <span class="nav-icon">♙</span> ผู้พักอาศัย
+          <% end %>
+          <%= link_to billing_path, class: "nav-link #{controller_name == 'billing' ? 'is-active' : ''}" do %>
+            <span class="nav-icon">฿</span> ค่าใช้จ่าย
+          <% end %>
+          <%= link_to billing_history_path, class: "nav-link #{controller_name == 'billing' && action_name == 'history' ? 'is-active' : ''}" do %>
+            <span class="nav-icon">◷</span> ประวัติการชำระ
+          <% end %>
+        </nav>
+        <div class="sidebar-foot">
+          <div class="user-chip"><span class="avatar">A</span><span><strong>ผู้ดูแลระบบ</strong><small>Administrator</small></span></div>
+          <%= button_to logout_path, method: :delete, class: "logout-link" do %><span>↪</span> ออกจากระบบ<% end %>
+        </div>
+      </aside>
+    <% end %>
+    <main class="page-shell <%= 'auth-shell' unless logged_in? %>">
+      <% if logged_in? && (notice || alert) %>
+        <div class="flash <%= alert ? 'flash-alert' : '' %>"><%= notice || alert %></div>
+      <% end %>
+    <%= yield %>
+    </main>
+  </body>
+</html>

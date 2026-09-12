@@ -1,0 +1,31 @@
+<% content_for :title, "เพิ่มผู้พักอาศัย | พักดี" %>
+<header class="topbar page-heading"><div><p class="eyebrow">NEW TENANT</p><h1>เพิ่มผู้พักอาศัย</h1><p class="muted">ลงทะเบียนผู้พักเข้าห้องที่ต้องการ</p></div></header>
+<section class="content-card form-card">
+
+<%= form_with model: @tenant do |form| %>
+
+  <div class="form-field">
+    <%= form.label :name, "ชื่อ" %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="form-field">
+    <%= form.label :phone, "เบอร์โทร" %>
+    <%= form.text_field :phone %>
+  </div>
+
+  <div class="form-field">
+    <%= form.label :id_card, "เลขบัตรประชาชน" %>
+    <%= form.text_field :id_card %>
+  </div>
+
+  <div class="form-field">
+    <%= form.label :room_id, "ห้อง" %>
+
+    <%= form.collection_select :room_id, @rooms, :id, :room_number,
+        prompt: "เลือกห้อง" %>
+  </div>
+
+  <div class="form-actions"><%= link_to "ยกเลิก", tenants_path, class: "button button-outline" %><%= form.submit "เพิ่มผู้พักอาศัย", class: "button button-primary" %></div>
+
+<% end %></section>

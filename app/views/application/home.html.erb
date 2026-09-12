@@ -1,0 +1,22 @@
+<h1>Dormitory System</h1>
+<p>ระบบจัดการหอพัก</p>
+<% content_for :title, "แดชบอร์ด | พักดี" %>
+
+<header class="topbar">
+	<div><p class="eyebrow">SATURDAY, 12 SEPTEMBER 2026</p><h1>สวัสดีครับ, ผู้ดูแลระบบ <span class="wave">✦</span></h1><p class="muted">ภาพรวมการจัดการหอพักของคุณวันนี้</p></div>
+	<%= link_to new_room_path, class: "button button-primary" do %><span>＋</span> เพิ่มห้องพัก<% end %>
+</header>
+
+<section class="metric-grid">
+	<article class="metric-card metric-blue"><div class="metric-icon">▦</div><div><span>ห้องพักทั้งหมด</span><strong><%= @rooms.count %></strong><small>ห้องในระบบ</small></div></article>
+	<article class="metric-card metric-mint"><div class="metric-icon">✓</div><div><span>ห้องว่าง</span><strong><%= @available_rooms %></strong><small>พร้อมเข้าอยู่</small></div></article>
+	<article class="metric-card metric-peach"><div class="metric-icon">♙</div><div><span>ผู้พักอาศัย</span><strong><%= @tenants.count %></strong><small>คนปัจจุบัน</small></div></article>
+	<article class="metric-card metric-lilac"><div class="metric-icon">฿</div><div><span>รายได้ต่อเดือน</span><strong><%= number_to_currency(@monthly_income, unit: "", precision: 0) %></strong><small>บาทโดยประมาณ</small></div></article>
+</section>
+
+<section class="dashboard-grid">
+	<article class="content-card occupancy-card"><div class="card-heading"><div><h2>สถานะห้องพัก</h2><p>ภาพรวมการใช้ห้องทั้งหมด</p></div><%= link_to "ดูทั้งหมด →", rooms_path, class: "text-link" %></div><div class="occupancy-summary"><strong><%= @rooms.any? ? ((@occupied_rooms.to_f / @rooms.count) * 100).round : 0 %></strong><span>อัตราการเข้าพัก</span></div><div class="progress-track"><span style="width: <%= @rooms.any? ? ((@occupied_rooms.to_f / @rooms.count) * 100) : 0 %>"></span></div><div class="legend"><span><i class="dot dot-occupied"></i> มีผู้พัก <b><%= @occupied_rooms %></b></span><span><i class="dot dot-available"></i> ว่าง <b><%= @available_rooms %></b></span></div></article>
+	<article class="content-card quick-card"><div class="card-heading"><div><h2>ทางลัด</h2><p>จัดการงานที่ใช้บ่อย</p></div></div><%= link_to new_room_path, class: "quick-action" do %><span class="action-icon blue-icon">＋</span><span><strong>เพิ่มห้องพักใหม่</strong><small>สร้างรายการห้องในระบบ</small></span><b>›</b><% end %><%= link_to new_tenant_path, class: "quick-action" do %><span class="action-icon peach-icon">♙</span><span><strong>เพิ่มผู้พักอาศัย</strong><small>ลงทะเบียนผู้พักเข้าห้อง</small></span><b>›</b><% end %></article>
+</section>
+
+<section class="content-card recent-card"><div class="card-heading"><div><h2>ผู้พักอาศัยล่าสุด</h2><p>รายการผู้พักที่เพิ่มเข้ามาล่าสุด</p></div><%= link_to "ดูผู้พักทั้งหมด →", tenants_path, class: "text-link" %></div><% if @tenants.any? %><div class="table-wrap"><table><thead><tr><th>ชื่อผู้พัก</th><th>ห้องพัก</th><th>เบอร์โทร</th><th>สถานะ</th></tr></thead><tbody><% @tenants.last(5).reverse_each do |tenant| %><tr><td><span class="table-avatar"><%= tenant.name.to_s.first %></span><strong><%= tenant.name %></strong></td><td>ห้อง <%= tenant.room&.room_number || "-" %></td><td><%= tenant.phone %></td><td><span class="status-pill status-active">เข้าพักอยู่</span></td></tr><% end %></tbody></table></div><% else %><div class="empty-state"><span>♙</span><strong>ยังไม่มีข้อมูลผู้พัก</strong><p>เพิ่มผู้พักอาศัยเพื่อเริ่มจัดการข้อมูล</p></div><% end %></section>

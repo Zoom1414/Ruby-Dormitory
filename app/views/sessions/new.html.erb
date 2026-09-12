@@ -1,0 +1,26 @@
+<% content_for :title, "เข้าสู่ระบบ | พักดี" %>
+
+<section class="login-panel">
+  <div class="login-brand">
+    <span class="brand-mark">พ</span>
+    <span><strong>พักดี</strong><small>RESIDENCE ADMIN</small></span>
+  </div>
+  <div class="login-copy">
+    <p class="eyebrow">WELCOME BACK</p>
+    <h1>จัดการหอพัก<br><em>ให้เป็นเรื่องง่าย</em></h1>
+    <p>ดูแลทุกห้อง ทุกการเข้าพัก และข้อมูลผู้พักอาศัยได้จากที่เดียว</p>
+  </div>
+  <%= form_with url: login_path, class: "login-form" do |form| %>
+    <div class="form-field">
+      <%= form.label :email, "อีเมลผู้ดูแลระบบ" %>
+      <%= form.email_field :email, placeholder: "admin@dormitory.local", autocomplete: "username", required: true %>
+    </div>
+    <div class="form-field">
+      <%= form.label :password, "รหัสผ่าน" %>
+      <%= form.password_field :password, placeholder: "••••••••", autocomplete: "current-password", required: true %>
+    </div>
+    <% if flash[:alert] %><p class="form-error"><%= flash[:alert] %></p><% end %>
+    <%= form.submit "เข้าสู่ระบบ  →", class: "button button-primary button-full" %>
+  <% end %>
+  <p class="login-hint">ระบบสำหรับผู้ดูแลหอพักโดยเฉพาะ</p>
+</section>

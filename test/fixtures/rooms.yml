@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  room_number: MyString
+  floor: 1
+  room_type: MyString
+  rent: 9.99
+  status: MyString
+
+two:
+  room_number: MyString
+  floor: 1
+  room_type: MyString
+  rent: 9.99
+  status: MyString
